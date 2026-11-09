@@ -67,6 +67,7 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 | `orthoSlices(A, spacing, [i j k])` | Axial/coronal/sagittal slices in radiological layout |
 | `showSlice(ax, img, pix, win, mask, title)` | Draw a slice with true proportions and an optional mask outline |
 | `intensityWindow(V)` | 1st-99th percentile display window |
+| `mustBeCase(c)` | Argument validator for the `loadCase` struct: `c (1,1) struct {mustBeCase}` |
 
 ## Task 2 (Roles B and C)
 

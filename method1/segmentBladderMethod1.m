@@ -1,8 +1,14 @@
 function bw = segmentBladderMethod1(c, params)
 %SEGMENTBLADDERMETHOD1 Segmentation technique 1 (Role B).
 %   bw = segmentBladderMethod1(c, params) returns a logical bladder mask the
-%   same size as c.img. c is the struct from loadCase; params comes from
-%   run_method1.m.
+%   same size as c.img. params comes from run_method1.m.
+%
+%   c is the case struct from loadCase (checked by mustBeCase):
+%     c.id       string scalar, e.g. "002016"
+%     c.img      3-D double T2 volume, native voxel order
+%     c.info     niftiinfo struct of the image
+%     c.spacing  voxel size in mm, [dx dy dz] along the array dimensions
+%     c.labels, c.bladder   ground truth: do NOT use (see rules below)
 %
 %   Rules for a fair comparison:
 %     - use only c.img, c.info and c.spacing as input. c.labels and c.bladder
@@ -13,6 +19,11 @@ function bw = segmentBladderMethod1(c, params)
 %   PLACEHOLDER: stage 2 below returns a 25 mm sphere at the centre of the
 %   volume. It is NOT a segmentation method; it only lets the pipeline and the
 %   evaluation run before your technique is ready. Replace it.
+
+arguments
+    c (1,1) struct {mustBeCase}
+    params (1,1) struct
+end
 
 %% 1. Preprocessing (e.g. intensity normalisation, bias correction, denoising)
 % Intensities are in arbitrary units and differ between scanners, so rescale
