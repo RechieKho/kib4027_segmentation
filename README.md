@@ -34,7 +34,68 @@ Until B and C implement their techniques, both methods output a dummy mask, so e
 **Predicted masks are not committed** (`results/masks/` is git-ignored). Commit the method *code*; whoever runs
 the evaluation first runs `run_method1.m` and `run_method2.m` to create the masks locally.
 
-### Working with git
+## Running the scripts
+
+### In MATLAB
+
+Open the script and press **Run** (F5), or type its path in the Command Window, e.g. from the repo folder:
+
+```matlab
+run('task1_data/task1_load_and_visualise.m')
+run('method1/run_method1.m')
+run('method2/run_method2.m')
+run('evaluation/run_evaluation.m')
+```
+
+The scripts set up their own paths, so the current folder does not matter. Each script starts with
+`clear; close all; clc`, so **save anything in your workspace first**.
+
+| Script | Time (approx.) | Needs first | Settings to change (top of the script) |
+|---|---|---|---|
+| `task1_data/task1_load_and_visualise.m` | 1-2 min | data | `saveCaseFigures`, `showFigures`, `shellWidthMm` |
+| `method1/run_method1.m`, `method2/run_method2.m` | ~10 s with the placeholder; depends on your method | data | `params` |
+| `evaluation/run_evaluation.m` | ~4 min (surface distances) | masks from both methods | `methodLabels`, `showFigures`, `lowerIsBetter` |
+
+Figures are saved without opening a window. Set `showFigures = true` to see them on screen as well.
+
+### Trying a method on one case
+
+The `run_methodN.m` scripts process all 49 cases. While developing, run your function on a single case in the
+Command Window (from the repo folder) and inspect the result:
+
+```matlab
+cfg = projectConfig();                 % sets up the paths
+addpath('method1');
+c = loadCase(cfg, "002004");
+params.smoothSigma = 1;                % same fields as in run_method1.m
+bw = segmentBladderMethod1(c, params);
+
+% Compare with the reference on the middle slice of the bladder
+k = round(mean(find(squeeze(any(c.bladder, [1 2])))));
+imshowpair(bw(:, :, k), c.bladder(:, :, k));   % green/magenta = disagreement
+```
+
+### From a terminal (no MATLAB window)
+
+From the repo folder:
+
+```
+matlab -batch "run('method1/run_method1.m')"
+```
+
+### Common problems
+
+| Message | Fix |
+|---|---|
+| `Unrecognized function or variable 'loadCase'` (or another helper) | Call `cfg = projectConfig();` first; it adds `common/` to the path. |
+| `No *_img.nii files found in ...` | The data is missing: check `data/dataAndMask/`, or run `git lfs pull`. |
+| `niftiread` fails on a `.nii` file | That file is an LFS pointer, not the volume. Run `git lfs pull`. |
+| `method1 is missing N of 49 masks` | Run `run_method1.m` (and `run_method2.m`) before the evaluation. |
+| `Value must be of type BladderCase` | Pass the whole case `c` from `loadCase`, not `c.img`. |
+| `predicted mask is [...] but c.img is [...]` | Your method changed the array size; resample the mask back to `size(c.img)`. |
+| `predicted mask must be logical` | Return a logical mask, e.g. `bw = I > t;` |
+
+## Working with git
 
 - Each person edits their own folder (see the layout below). Ask before changing `common/`, `projectConfig.m` or
   `test_cases.csv`, since everyone depends on them.
