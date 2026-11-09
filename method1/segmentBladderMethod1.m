@@ -3,11 +3,11 @@ function bw = segmentBladderMethod1(c, params)
 %   bw = segmentBladderMethod1(c, params) returns a logical bladder mask the
 %   same size as c.img. params comes from run_method1.m.
 %
-%   c is the case struct from loadCase (checked by mustBeCase):
-%     c.id       string scalar, e.g. "002016"
+%   c is a BladderCase from loadCase (type c. in the editor to see them all):
+%     c.id       case id, e.g. "002016"
 %     c.img      3-D double T2 volume, native voxel order
-%     c.info     niftiinfo struct of the image
 %     c.spacing  voxel size in mm, [dx dy dz] along the array dimensions
+%     c.info     niftiinfo struct of the image
 %     c.labels, c.bladder   ground truth: do NOT use (see rules below)
 %
 %   Rules for a fair comparison:
@@ -21,7 +21,7 @@ function bw = segmentBladderMethod1(c, params)
 %   evaluation run before your technique is ready. Replace it.
 
 arguments
-    c (1,1) struct {mustBeCase}
+    c (1,1) BladderCase
     params (1,1) struct
 end
 

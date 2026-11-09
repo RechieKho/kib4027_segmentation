@@ -46,7 +46,7 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 ## Shared conventions (agreed for a fair comparison)
 
 1. Loop over `ids = readTestCases(cfg);` and nothing else.
-2. Load with `c = loadCase(cfg, id);`. This gives `c.img` (double), `c.bladder` (logical reference) and
+2. Load with `c = loadCase(cfg, id);`. This returns a `BladderCase` `c` with `c.img` (double), `c.bladder` (logical reference) and
    `c.info` (NIfTI header). Arrays are in the file's **native voxel order**, so do not reorient before segmenting.
 3. Save each predicted mask with `savePredictedMask(cfg, c, 'method1', bw);`. This writes
    `results/masks/method1/<caseId>_pred.nii` as uint8 0/1 on the same grid and header as the image.
@@ -67,7 +67,7 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 | `orthoSlices(A, spacing, [i j k])` | Axial/coronal/sagittal slices in radiological layout |
 | `showSlice(ax, img, pix, win, mask, title)` | Draw a slice with true proportions and an optional mask outline |
 | `intensityWindow(V)` | 1st-99th percentile display window |
-| `mustBeCase(c)` | Argument validator for the `loadCase` struct: `c (1,1) struct {mustBeCase}` |
+| `BladderCase` | Class returned by `loadCase`. Declare arguments as `c (1,1) BladderCase` to get type checks and property suggestions in the editor. |
 
 ## Task 2 (Roles B and C)
 
@@ -76,7 +76,7 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 | File | What to do |
 |---|---|
 | `run_methodN.m` | Driver: loops over the test cases, saves masks in the shared format, writes `results/tables/methodN_runtime.csv` and prints a sanity-check Dice. Only edit the `params` block. |
-| `segmentBladderMethodN.m` | **Put your technique here**, in the three marked stages: preprocessing, segmentation, post-processing. Input is the `loadCase` struct; output is a logical mask the same size as `c.img`. |
+| `segmentBladderMethodN.m` | **Put your technique here**, in the three marked stages: preprocessing, segmentation, post-processing. Input is the `BladderCase` from `loadCase`; output is a logical mask the same size as `c.img`. |
 
 The segmentation stage is a placeholder (a 25 mm sphere at the volume centre, median Dice about 0.01) so the
 pipeline and the evaluation can run before the real methods exist. Do not use `c.labels` or `c.bladder` inside

@@ -1,7 +1,7 @@
 function outFile = savePredictedMask(cfg, c, methodName, bw)
 %SAVEPREDICTEDMASK Save a predicted bladder mask in the agreed shared format.
 %   outFile = savePredictedMask(cfg, c, methodName, bw) writes
-%   results/masks/<methodName>/<caseId>_pred.nii, where c is the struct from
+%   results/masks/<methodName>/<caseId>_pred.nii, where c is the BladderCase from
 %   loadCase and bw is a logical array the same size as c.img.
 %
 %   Agreed format (so the evaluation script can read every method the same way):
