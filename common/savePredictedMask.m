@@ -10,10 +10,13 @@ function outFile = savePredictedMask(cfg, c, methodName, bw)
 %       NOT the display orientation)
 %     - uint8, 1 = bladder, 0 = background
 
-if ~isequal(size(bw), size(c.img))
-    error('savePredictedMask:size', 'Case %s: mask is %s but image is %s.', ...
-        c.id, mat2str(size(bw)), mat2str(size(c.img)));
+arguments
+    cfg (1,1) struct
+    c (1,1) BladderCase
+    methodName (1,1) string
+    bw
 end
+c.checkPrediction(bw);
 
 outDir = fullfile(cfg.maskDir, methodName);
 if ~isfolder(outDir), mkdir(outDir); end

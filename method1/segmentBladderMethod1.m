@@ -1,14 +1,19 @@
 function bw = segmentBladderMethod1(c, params)
 %SEGMENTBLADDERMETHOD1 Segmentation technique 1 (Role B).
-%   bw = segmentBladderMethod1(c, params) returns a logical bladder mask the
-%   same size as c.img. params comes from run_method1.m.
+%   bw = segmentBladderMethod1(c, params) segments the bladder in one case.
 %
-%   c is a BladderCase from loadCase (type c. in the editor to see them all):
-%     c.id       case id, e.g. "002016"
-%     c.img      3-D double T2 volume, native voxel order
-%     c.spacing  voxel size in mm, [dx dy dz] along the array dimensions
-%     c.info     niftiinfo struct of the image
-%     c.labels, c.bladder   ground truth: do NOT use (see rules below)
+%   INPUT (the same for both methods)
+%     c       BladderCase from loadCase (type c. in the editor to see them all):
+%               c.id       case id, e.g. "002016"
+%               c.img      3-D double T2 volume, native voxel order
+%               c.spacing  voxel size in mm, [dx dy dz] along the array dimensions
+%               c.info     niftiinfo struct of the image
+%               c.labels, c.bladder   ground truth: do NOT use (see rules below)
+%     params  struct of your tunable settings, set in run_method1.m
+%
+%   OUTPUT (the same for both methods, checked by savePredictedMask)
+%     bw      logical array, size(bw) == size(c.img), native voxel order,
+%             true = bladder, false = background.
 %
 %   Rules for a fair comparison:
 %     - use only c.img, c.info and c.spacing as input. c.labels and c.bladder
@@ -23,6 +28,9 @@ function bw = segmentBladderMethod1(c, params)
 arguments
     c (1,1) BladderCase
     params (1,1) struct
+end
+arguments (Output)
+    bw (:,:,:) logical
 end
 
 %% 1. Preprocessing (e.g. intensity normalisation, bias correction, denoising)

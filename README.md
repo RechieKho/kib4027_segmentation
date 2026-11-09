@@ -76,7 +76,15 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 | File | What to do |
 |---|---|
 | `run_methodN.m` | Driver: loops over the test cases, saves masks in the shared format, writes `results/tables/methodN_runtime.csv` and prints a sanity-check Dice. Only edit the `params` block. |
-| `segmentBladderMethodN.m` | **Put your technique here**, in the three marked stages: preprocessing, segmentation, post-processing. Input is the `BladderCase` from `loadCase`; output is a logical mask the same size as `c.img`. |
+| `segmentBladderMethodN.m` | **Put your technique here**, in the three marked stages: preprocessing, segmentation, post-processing. Keep the function signature (see below). |
+
+Both methods have the same signature, `bw = segmentBladderMethodN(c, params)`:
+
+| | Argument | Type | Checked by |
+|---|---|---|---|
+| In | `c` | `BladderCase` from `loadCase`. Use only `c.img`, `c.spacing`, `c.info` (and `c.id`). | `arguments` block |
+| In | `params` | struct of your settings, set in `run_methodN.m` | `arguments` block |
+| Out | `bw` | logical, `size(bw) == size(c.img)`, native voxel order, true = bladder | `arguments (Output)` block (type) and `c.checkPrediction` in `savePredictedMask` (size; warns if empty) |
 
 The segmentation stage is a placeholder (a 25 mm sphere at the volume centre, median Dice about 0.01) so the
 pipeline and the evaluation can run before the real methods exist. Do not use `c.labels` or `c.bladder` inside

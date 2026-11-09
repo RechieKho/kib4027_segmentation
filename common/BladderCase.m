@@ -12,6 +12,7 @@ classdef BladderCase
 %
 %   In a function, declare the argument as  c (1,1) BladderCase  so MATLAB
 %   checks the input and the editor suggests the properties below.
+%   c.checkPrediction(bw) checks a method's output mask against this case.
 
     properties (SetAccess = immutable)
         % Case id, e.g. "002016"
@@ -58,6 +59,25 @@ classdef BladderCase
                 end
                 c.labels = uint8(round(labels));     % some masks are stored as single
                 c.bladder = c.labels == cfg.bladderLabel;
+            end
+        end
+
+        function checkPrediction(c, bw)
+            %CHECKPREDICTION Error unless bw is a valid predicted mask for this case.
+            %   c.checkPrediction(bw) checks the agreed method output: a logical
+            %   array the same size as c.img (native voxel order, true = bladder).
+            %   Warns if the mask is empty, which usually means the method failed.
+            if ~islogical(bw)
+                error('BladderCase:predictionType', 'Case %s: predicted mask must be logical, not %s.', ...
+                    c.id, class(bw));
+            end
+            if ~isequal(size(bw), size(c.img))
+                error('BladderCase:predictionSize', ...
+                    'Case %s: predicted mask is %s but c.img is %s. Resample back to the original grid.', ...
+                    c.id, mat2str(size(bw)), mat2str(size(c.img)));
+            end
+            if ~any(bw, 'all')
+                warning('BladderCase:emptyPrediction', 'Case %s: predicted mask is empty.', c.id);
             end
         end
     end
