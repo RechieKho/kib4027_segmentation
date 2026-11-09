@@ -25,8 +25,8 @@ If `data/dataAndMask/` contains small text files instead of `.nii` volumes, LFS 
 | `test_cases.csv` | A | Fixed list of test cases. **Both methods and the evaluation use exactly these cases.** |
 | `common/` | A (shared) | Helper functions everyone uses (see below). |
 | `task1_data/` | A | Task 1: loading, visualisation, dataset characteristics. |
-| `method1/` | B | Segmentation technique 1. |
-| `method2/` | C | Segmentation technique 2. |
+| `method1/` | B | Segmentation technique 1 (template: `run_method1.m` + `segmentBladderMethod1.m`). |
+| `method2/` | C | Segmentation technique 2 (template: `run_method2.m` + `segmentBladderMethod2.m`). |
 | `evaluation/` | D | Dice / IoU, statistics, error analysis. |
 | `results/masks/<method>/` | B, C | Predicted masks, one file per test case. |
 | `results/figures/`, `results/tables/` | all | Figures and tables for the report (use a subfolder per task/method). |
@@ -67,6 +67,19 @@ Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They a
 | `orthoSlices(A, spacing, [i j k])` | Axial/coronal/sagittal slices in radiological layout |
 | `showSlice(ax, img, pix, win, mask, title)` | Draw a slice with true proportions and an optional mask outline |
 | `intensityWindow(V)` | 1st-99th percentile display window |
+
+## Task 2 (Roles B and C)
+
+`method1/` and `method2/` each contain a ready-made template:
+
+| File | What to do |
+|---|---|
+| `run_methodN.m` | Driver: loops over the test cases, saves masks in the shared format, writes `results/tables/methodN_runtime.csv` and prints a sanity-check Dice. Only edit the `params` block. |
+| `segmentBladderMethodN.m` | **Put your technique here**, in the three marked stages: preprocessing, segmentation, post-processing. Input is the `loadCase` struct; output is a logical mask the same size as `c.img`. |
+
+The segmentation stage is a placeholder (a 25 mm sphere at the volume centre, median Dice about 0.01) so the
+pipeline and the evaluation can run before the real methods exist. Do not use `c.labels` or `c.bladder` inside
+`segmentBladderMethodN.m`: those are the ground truth.
 
 ## Task 1 (Role A)
 
