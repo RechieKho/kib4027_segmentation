@@ -1,0 +1,2 @@
+data/**/*.nii filter=lfs diff=lfs merge=lfs -text
+data/**/*.nii.gz filter=lfs diff=lfs merge=lfs -text

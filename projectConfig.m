@@ -10,8 +10,9 @@ function cfg = projectConfig()
 
 cfg.root = fileparts(mfilename('fullpath'));
 
-% Folder holding <caseId>_img.nii and <caseId>_mask.nii (lecturer's Drive copy).
-cfg.dataDir = fullfile(cfg.root, '..', 'files', 'dataAndMask');
+% Folder holding <caseId>_img.nii and <caseId>_mask.nii (lecturer's Drive copy,
+% stored in this repo under data/ via Git LFS).
+cfg.dataDir = fullfile(cfg.root, 'data', 'dataAndMask');
 if ~isempty(getenv('KIB4027_DATA'))
     cfg.dataDir = getenv('KIB4027_DATA');
 end

@@ -2,10 +2,25 @@
 
 MATLAB R2022b or later with the Image Processing Toolbox. No other toolboxes are needed.
 
+## Quick start
+
+1. Clone the repo. The dataset (~1 GB) is stored with Git LFS and downloads automatically. Git LFS is included
+   with Git for Windows. On other systems, install it and run `git lfs install` once before cloning.
+   ```
+   git clone <repo-url>
+   ```
+2. Open the cloned folder in MATLAB.
+3. Run `task1_data/task1_load_and_visualise.m` (about 1-2 minutes) to check your setup. It should finish without
+   errors and write figures to `results/figures/task1/`.
+
+If `data/dataAndMask/` contains small text files instead of `.nii` volumes, LFS did not download them. Run
+`git lfs pull` in the repo folder.
+
 ## Folder layout
 
 | Folder / file | Owner | What goes there |
 |---|---|---|
+| `data/dataAndMask/` | A | MRI volumes and reference masks (Git LFS). Do not edit. |
 | `projectConfig.m` | A | Shared paths. Call `cfg = projectConfig();` at the top of every script. |
 | `test_cases.csv` | A | Fixed list of test cases. **Both methods and the evaluation use exactly these cases.** |
 | `common/` | A (shared) | Helper functions everyone uses (see below). |
@@ -19,9 +34,9 @@ MATLAB R2022b or later with the Image Processing Toolbox. No other toolboxes are
 ## Data
 
 The 50 volumes come from the lecturer's Google Drive (`dataForAssignment/dataAndMask`), a subset of the
-Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). By default the code expects them in
-`../files/dataAndMask/`. If your copy is elsewhere, run `setenv('KIB4027_DATA', 'C:\path\to\dataAndMask')` before
-`projectConfig`, or edit `cfg.dataDir`.
+Cross-institution Male Pelvic Structures dataset (Zenodo record 7013610). They are included in this repo under
+`data/dataAndMask/` (Git LFS), which is where `projectConfig` looks by default. To use a copy elsewhere, run
+`setenv('KIB4027_DATA', 'C:\path\to\dataAndMask')` before `projectConfig`.
 
 - `<caseId>_img.nii`: T2-weighted volume. `<caseId>_mask.nii`: multi-class reference mask (labels 0-8). **Bladder = label 1.**
 - Case `002015` has no reference mask, so it is excluded. The test set is the other **49 cases**.
