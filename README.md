@@ -27,7 +27,7 @@ If `data/dataAndMask/` contains small text files instead of `.nii` volumes, LFS 
 | `task1_data/` | A | Task 1: loading, visualisation, dataset characteristics. |
 | `method1/` | B | Segmentation technique 1 (template: `run_method1.m` + `segmentBladderMethod1.m`). |
 | `method2/` | C | Segmentation technique 2 (template: `run_method2.m` + `segmentBladderMethod2.m`). |
-| `evaluation/` | D | Dice / IoU, statistics, error analysis. |
+| `evaluation/` | D | Dice / IoU, statistics, error analysis (template: `run_evaluation.m` + `computeMetrics.m`). |
 | `results/masks/<method>/` | B, C | Predicted masks, one file per test case. |
 | `results/figures/`, `results/tables/` | all | Figures and tables for the report (use a subfolder per task/method). |
 
@@ -89,6 +89,26 @@ Both methods have the same signature, `bw = segmentBladderMethodN(c, params)`:
 The segmentation stage is a placeholder (a 25 mm sphere at the volume centre, median Dice about 0.01) so the
 pipeline and the evaluation can run before the real methods exist. Do not use `c.labels` or `c.bladder` inside
 `segmentBladderMethodN.m`: those are the ground truth.
+
+## Tasks 3 and 4 (Role D)
+
+`evaluation/` contains a ready-made template:
+
+| File | What to do |
+|---|---|
+| `run_evaluation.m` | Driver: checks every method has a mask for every test case, computes the metrics, writes the tables and draws the figures below. Set `methodLabels` to the technique names; add your own plots in section 5. |
+| `computeMetrics.m` | Metrics for one case: Dice, IoU, sensitivity, precision, volumes, signed volume difference, HD95 and ASSD (mm). Add a metric as a new field and it appears in every table. |
+
+Outputs:
+
+- `results/tables/metrics.csv`: one row per case per method
+- `results/tables/metrics_summary.csv`: n, mean, SD, median, IQR, range per method and metric
+- `results/tables/metrics_paired.csv`: method 2 vs method 1 per metric (median difference, wins, Wilcoxon signed-rank p)
+- `results/figures/evaluation/fig_metrics.png`: Dice, IoU and HD95 per method, lines joining the same case
+- `results/figures/evaluation/fig_dice_vs_characteristics.png`: Dice against bladder volume, contrast and truncated dome (Task 1 table)
+- `results/figures/evaluation/errors/<caseId>_errors.png`: TP / FP / FN maps in three views for each method's worst case
+
+No Statistics Toolbox is needed: quantiles and the Wilcoxon test are implemented in the script.
 
 ## Task 1 (Role A)
 

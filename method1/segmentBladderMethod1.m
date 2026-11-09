@@ -25,7 +25,7 @@ function bw = segmentBladderMethod1(c, params)
 %   volume. It is NOT a segmentation method; it only lets the pipeline and the
 %   evaluation run before your technique is ready. Replace it.
 
-arguments
+arguments (Input)
     c (1,1) BladderCase
     params (1,1) struct
 end
